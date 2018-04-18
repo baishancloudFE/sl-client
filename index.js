@@ -1,3 +1,3 @@
-function Client(info) {
-  console.log('wahaha')
+function Client(config) {
+  console.log(__dirname)
 }
