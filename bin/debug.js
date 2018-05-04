@@ -1,5 +1,10 @@
 #!/usr/bin/env node
 
+const fs = require('fs')
+const path = require('path')
+const cache = {}
+const prefix = 'https://raw.githubusercontent.com/baishancloudFE/sl-client/master'
+
 run(argvHandle(process.argv))
 
 function argvHandle(argv) {
@@ -42,25 +47,34 @@ function argvHandle(argv) {
 }
 
 function run(args) {
-  if (args) return require('../main')(args)
+  if (args) return fs.readFile(path.join(__dirname, '../main.js'), (err, data) => {
+    if (err) throw err
+
+    console.log(data.toString())
+    const main = eval(data.toString())
+
+    main(args)
+  })
 }
 
-function _require(url) {
-  const protocol = url.split(':')[0]
-
-  if (protocol !== 'http' || protocol !== 'https')
-    throw new Error('source must be HTTP or HTTPS link.')
-
-  return new Promise((resolve, reject) => {
-    require(protocol).get(url, res => {
-      if (res.statusCode !== 200)
-        throw new Error('failed to get the client code!')
-
-      let code = ''
-      res.setEncoding('utf8')
-      res.on('data', chunk => code += chunk)
-      res.on('end', () => resolve(eval(code)))
-      res.on('error', reject)
+function _require(uri) {
+  if (!cache[uri]) {
+    const url = prefix + uri
+    const protocol = url.split(':')[0]
+  
+    cache[uri] = new Promise((resolve, reject) => {
+      require(protocol).get(url, res => {
+        if (res.statusCode !== 200)
+          throw new Error('Failed to get the client code!')
+  
+        let code = ''
+        res.setEncoding('utf8')
+        res.on('data', chunk => code += chunk)
+        res.on('end', () => resolve(eval(code)))
+        res.on('error', reject)
+      })
     })
-  })
+  }
+
+  return cache[uri]
 }
