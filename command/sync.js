@@ -16,6 +16,7 @@ module.exports = function (supplement, syncCallback, codeCallback) {
       _require('/lib/signal'),
       _require('/lib/NodeWatchFileSystem')
     ]).then(([signal, NodeWatchFileSystem]) => {
+      console.log(signal, NodeWatchFileSystem)
       const wfs = new NodeWatchFileSystem(socket)
 
       // 建连后与服务端同步项目
