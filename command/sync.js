@@ -29,7 +29,8 @@ module.exports = function (supplement, syncCallback, codeCallback) {
        * 初始化连接
        */
       function init() {
-        console.log('init')
+        console.log('connected to server.\n')
+
         socket.write(signal.encode(
           signal.CLIENT_INIT,
           Buffer.from(JSON.stringify({ uid, project, builder }))
