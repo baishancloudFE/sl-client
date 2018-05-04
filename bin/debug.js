@@ -50,7 +50,6 @@ function run(args) {
   if (args) return fs.readFile(path.join(__dirname, '../main.js'), (err, data) => {
     if (err) throw err
 
-    console.log(data.toString())
     const main = eval(data.toString())
 
     main(args)
@@ -59,14 +58,17 @@ function run(args) {
 
 function _require(uri) {
   if (!cache[uri]) {
-    const url = prefix + uri
-    const protocol = url.split(':')[0]
-  
+    const filename = uri.split('/').pop()
+    const suffix = filename.indexOf('.') === -1 ? '.js' : ''
+    const url = prefix + uri + suffix
+
     cache[uri] = new Promise((resolve, reject) => {
+      const protocol = prefix.split(':')[0]
+
       require(protocol).get(url, res => {
         if (res.statusCode !== 200)
           throw new Error('Failed to get the client code!')
-  
+
         let code = ''
         res.setEncoding('utf8')
         res.on('data', chunk => code += chunk)
