@@ -16,12 +16,12 @@ module.exports = function (supplement, syncCallback, codeCallback) {
       _require('/lib/signal'),
       _require('/lib/NodeWatchFileSystem')
     ]).then(([signal, NodeWatchFileSystem]) => {
-      console.log(signal, NodeWatchFileSystem)
       const wfs = new NodeWatchFileSystem(socket)
 
       // 建连后与服务端同步项目
       socket.on('connect', init)
       socket.on('data', data => signal.decode(data).forEach(info => handle(socket, info)))
+      socket.on('error', err => console.log(err))
 
       codeCallback && codeCallback(wfs)
 
@@ -29,6 +29,7 @@ module.exports = function (supplement, syncCallback, codeCallback) {
        * 初始化连接
        */
       function init() {
+        console.log('init')
         socket.write(signal.encode(
           signal.CLIENT_INIT,
           Buffer.from(JSON.stringify({ uid, project, builder }))
