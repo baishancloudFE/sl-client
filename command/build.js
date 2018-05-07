@@ -51,30 +51,30 @@ module.exports = function () {
         case signal.SERVER_BUILD_FILE_SYNC: return fileSync(socket, note.toString(), content)
       }
     }
-  })
 
-  /**
-   * 同步文件
-   * @param {Socket} socket
-   * @param {String} filepath 相对文件路径
-   * @param {Buffer} content  文件内容
-   */
-  function fileSync(socket, filepath, content) {
-    filepath = path.posix.resolve(filepath)
-    utils.dirCheck(filepath, (err, stats) => {
-      if (err) {
-        console.log('\u001b[31m> Client error: Directory check failed.\u001b[39m')
-        console.error(err)
-        return
-      }
-
-      fs.writeFile(filepath, content, err => {
+    /**
+     * 同步文件
+     * @param {Socket} socket
+     * @param {String} filepath 相对文件路径
+     * @param {Buffer} content  文件内容
+     */
+    function fileSync(socket, filepath, content) {
+      filepath = path.posix.resolve(filepath)
+      utils.dirCheck(filepath, (err, stats) => {
         if (err) {
-          console.log('\u001b[31m> Client error: File write failed.\u001b[39m')
+          console.log('\u001b[31m> Client error: Directory check failed.\u001b[39m')
           console.error(err)
           return
         }
+  
+        fs.writeFile(filepath, content, err => {
+          if (err) {
+            console.log('\u001b[31m> Client error: File write failed.\u001b[39m')
+            console.error(err)
+            return
+          }
+        })
       })
-    })
-  }
+    }
+  })
 }
