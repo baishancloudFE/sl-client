@@ -12,6 +12,7 @@
   "author": "yutao.shi",
   "license": "MIT",
   "devDependencies": {
+    "chalk": "^2.4.1",
     "inquirer": "^5.2.0",
     "opn": "^5.3.0",
     "uuid": "^3.2.1",

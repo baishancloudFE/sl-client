@@ -1,6 +1,7 @@
 module.exports = function () {
   const fs = require('fs')
   const path = require('path')
+  const chalk = require('chalk')
 
   Promise.all([
     _require('/command/sync'),
@@ -22,7 +23,7 @@ module.exports = function () {
               new Promise((resolve, reject) => {
                 fs.readFile(filepath, (err, data) => {
                   if (err) {
-                    console.log('\u001b[31m> Client error: Failed to read file: ' + filepath + '\u001b[39m')
+                    console.log(chalk.red('> Client error: Failed to read file: ' + filepath))
                     throw err
                   }
 
@@ -63,14 +64,14 @@ module.exports = function () {
 
       utils.dirCheck(filepath, (err, stats) => {
         if (err) {
-          console.log('\u001b[31m> Client error: Directory check failed.\u001b[39m')
+          console.log(chalk.red('> Client error: Directory check failed.'))
           console.error(err)
           return
         }
 
         fs.writeFile(filepath, content, err => {
           if (err) {
-            console.log('\u001b[31m> Client error: File write failed.\u001b[39m')
+            console.log(chalk.red('> Client error: File write failed.'))
             console.error(err)
             return
           }

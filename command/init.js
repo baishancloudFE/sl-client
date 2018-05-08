@@ -1,10 +1,11 @@
-const fs = require('fs')
-const npm = require('npm')
-const path = require('path')
-const inquirer = require('inquirer')
-const {exec} = require('child_process')
-
 module.exports = function() {
+  const fs = require('fs')
+  const npm = require('npm')
+  const path = require('path')
+  const chalk = require('chalk')
+  const inquirer = require('inquirer')
+  const {exec} = require('child_process')
+
   const questions = [{
     type: 'list',
     name: 'type',
@@ -26,15 +27,15 @@ module.exports = function() {
     }
   }]
 
-  inquirer.prompt(questions).then(answers => {
+  inquirer.prompt(questions).then(async answers => {
     const {name, type} = answers
     const callback = initCallback(answers)
-    const response = require('../config').template[answers.type]
+    const response = await _require('/config').template[answers.type]
 
-    console.log(`> Cloning into '\u001b[94m${name}\u001b[39m' from '\u001b[94m${response}\u001b[39m'...`)
+    console.log(`> Cloning into '${chalk.cyan(name)}' from '${chalk.cyan(response)}'...`)
     return exec(`git clone ${response} ${path.join(process.cwd(), name)}`, (err, stdout, stderr) => {
       if (err) {
-        console.error('\u001b[31m> Failed to git clone!\n\u001b[39m')
+        console.error(chalk.red('> Failed to git clone!\n'))
         throw err
       }
 
@@ -43,26 +44,26 @@ module.exports = function() {
       const gitPath = path.join(appPath, '.git')
 
       exec(process.platform === 'win32' ? `rd /s /q "${gitPath}"` : `rm -rf ${gitPath}`, (err, stdout, stderr) => {
-        if (err) console.log('\u001b[33m> Failed to remove \'.git\' directory! Please delete manually.\u001b[39m')
+        if (err) console.log(chalk.red('> Failed to remove \'.git\' directory! Please delete manually.'))
 
-        console.log('\u001b[32m> Done.\n\u001b[39m')
+        console.log(chalk.green('> Done.\n'))
         callback()
       })
     })
   })
-}
 
-function initCallback({name, type}) {
-  switch(type) {
-    case 'iGroot Project':
-      return () => {
-        console.log('please run:', `\u001b[94m\n   cd ${name} & sl dev\u001b[39m`)
-      }
+  function initCallback({name, type}) {
+    switch(type) {
+      case 'iGroot Project':
+        return () => {
+          console.log('please run:', chalk.cyan(`\n   cd ${name} & sl dev`))
+        }
 
-    case 'iGroot Business Component':
-      return () => {
-        console.log('\u001b[94mif you need to develop and debugging the iGroot business component, please run:\u001b[39m')
-        console.log(`\u001b[94m\n   cd ${name}\n   npm install\n   sl dev\u001b[39m`)
-      }
+      case 'iGroot Business Component':
+        return () => {
+          console.log(chalk.cyan('if you need to develop and debugging the iGroot business component, please run:'))
+          console.log(chalk.cyan(`\n   cd ${name}\n   npm install\n   sl dev`))
+        }
+    }
   }
 }
