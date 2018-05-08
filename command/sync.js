@@ -5,7 +5,7 @@
  * @param {Function} codeCallback 本函数代码顺序执行完毕的回调
  */
 module.exports = function (supplement, syncCallback, codeCallback) {
-  _require('/lib/utils').then(({ bsy: { name: project, builder, options: { buildPath } }, readFiles, uid, connect }) => {
+  _require('/lib/utils').then(({ bsy: { name: project, builder, options: { buildPath = './dist' } }, readFiles, uid, connect }) => {
     watch(connect(), supplement, syncCallback, codeCallback)
 
     function watch(socket, supplement, syncCallback, codeCallback) {
