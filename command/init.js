@@ -30,7 +30,8 @@ module.exports = function() {
   inquirer.prompt(questions).then(async answers => {
     const {name, type} = answers
     const callback = initCallback(answers)
-    const response = await _require('/config').template[answers.type]
+    const config = await _require('/config')
+    const response = config.template[answers.type]
 
     console.log(`> Cloning into '${chalk.cyan(name)}' from '${chalk.cyan(response)}'...`)
     return exec(`git clone ${response} ${path.join(process.cwd(), name)}`, (err, stdout, stderr) => {
