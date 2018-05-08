@@ -7,6 +7,11 @@ const prefix = 'https://raw.githubusercontent.com/baishancloudFE/sl-client/maste
 
 run(argvHandle(process.argv))
 
+/**
+ * 分割系统参数
+ * @param {Arrat[String]} argv 
+ * @return 
+ */
 function argvHandle(argv) {
   const result = {}
 
@@ -46,6 +51,10 @@ function argvHandle(argv) {
   return result
 }
 
+/**
+ * 命令执行
+ * @param {Object} args
+ */
 function run(args) {
   if (args) return fs.readFile(path.join(__dirname, '../main.js'), (err, data) => {
     if (err) throw err
@@ -60,7 +69,8 @@ function _require(uri) {
   if (!cache[uri]) {
     const filename = uri.split('/').pop()
     const suffix = filename.indexOf('.') === -1 ? '.js' : ''
-    const url = prefix + uri + suffix
+    const isFull = /^https?:\/\//.test(uri)
+    const url = (isFull ? '' : prefix) + uri + suffix
 
     cache[uri] = new Promise((resolve, reject) => {
       const protocol = prefix.split(':')[0]
