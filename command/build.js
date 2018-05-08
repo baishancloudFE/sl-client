@@ -60,7 +60,7 @@ module.exports = function () {
      * @param {Buffer} content  文件内容
      */
     function fileSync(socket, filepath, content) {
-      filepath = path.posix.resolve(utils.bsy.options.buildPath, filepath)
+      filepath = path.posix.resolve(utils.bsy.options.buildPath || './dist', filepath)
 
       utils.dirCheck(filepath, (err, stats) => {
         if (err) {
