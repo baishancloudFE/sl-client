@@ -12,7 +12,6 @@ module.exports = function () {
     function syncCallback(socket) {
       const dist = path.posix.resolve(utils.bsy.options.buildPath || './dist')
 
-      console.log(utils.bsy.options.buildPath, utils.bsy)
       fs.stat(dist, (err, stat) => {
         const filesInfo = (() => {
           if (err || !stat.isDirectory)
@@ -60,7 +59,8 @@ module.exports = function () {
      * @param {Buffer} content  文件内容
      */
     function fileSync(socket, filepath, content) {
-      filepath = path.posix.resolve(filepath)
+      filepath = path.posix.resolve(utils.bsy.options.buildPath, filepath)
+
       utils.dirCheck(filepath, (err, stats) => {
         if (err) {
           console.log('\u001b[31m> Client error: Directory check failed.\u001b[39m')
