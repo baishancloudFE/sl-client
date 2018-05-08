@@ -33,7 +33,7 @@ module.exports = function() {
     const config = await _require('/config')
     const response = config.template[answers.type]
 
-    console.log(`> Cloning into '${chalk.cyan(name)}' from '${chalk.cyan(response)}'...`)
+    console.log(chalk.gray(`> Cloning into '${chalk.cyan(name)}' from '${chalk.cyan(response)}'...`))
     return exec(`git clone ${response} ${path.join(process.cwd(), name)}`, (err, stdout, stderr) => {
       if (err) {
         console.error(chalk.red('> Failed to git clone!\n'))
