@@ -12,7 +12,7 @@ module.exports = function () {
     function syncCallback(socket) {
       const dist = path.posix.resolve(utils.bsy.options.buildPath || './dist')
 
-      console.log(dist)
+      console.log(utils.bsy.options.buildPath, utils.bsy)
       fs.stat(dist, (err, stat) => {
         const filesInfo = (() => {
           if (err || !stat.isDirectory)
