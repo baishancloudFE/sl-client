@@ -3,5 +3,5 @@ module.exports = function() {
   try { config = require('./sl.json') }
   catch (e) { config = {} }
 
-  return console.log(JSON.stringify(config, 2))
+  return console.log(JSON.stringify(config, undefined, 2))
 }
